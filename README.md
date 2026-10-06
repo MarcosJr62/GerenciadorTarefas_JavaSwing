@@ -54,12 +54,6 @@ Tela responsável pelo gerenciamento das categorias utilizadas para organizar as
 
 <img width="329" height="426" alt="image" src="https://github.com/user-attachments/assets/6c4674c9-b9b7-4297-bf4a-65ddf0e889f3" />
 
-### Cadastro de Usuário
-
-Tela destinada à criação de novos usuários, contendo informações como nome, e-mail, login e senha.
-
-<img width="278" height="427" alt="image" src="https://github.com/user-attachments/assets/7aee4207-96d2-48d3-a850-42d3b5727f50" />
-
 ---
 
 ## Diagramas
