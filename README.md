@@ -66,9 +66,6 @@ O diagrama de classes apresenta as principais entidades do sistema e seus respec
 
 As principais classes planejadas são:
 
-* **Usuario**
-<img width="134" height="212" alt="diagrama" src="https://github.com/user-attachments/assets/dd719450-a297-4271-8235-0be5c6438d78" />
-
 * **Tarefa**
 <img width="199" height="278" alt="diagrama (2)" src="https://github.com/user-attachments/assets/6ccede90-2882-43f6-b87d-7e8c78512418" />
 
