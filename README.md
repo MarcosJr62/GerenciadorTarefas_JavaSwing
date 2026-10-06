@@ -1,10 +1,10 @@
 # GerenciadorTarefas_JavaSwing
 
-# TaskManager — Gerenciador de Tarefas
+# Gerenciador de Tarefas
 
 ## Sobre o projeto
 
-O **TaskManager** é um sistema de gerenciamento de tarefas desenvolvido em **Java Swing**, com o objetivo de auxiliar usuários a cadastrar, organizar, acompanhar e concluir suas atividades.
+O **Gerenciador de Tarefas** é um sistema de gerenciamento de tarefas desenvolvido em **Java Swing**, com o objetivo de auxiliar usuários a cadastrar, organizar, acompanhar e concluir suas atividades.
 
 O sistema foi planejado para permitir o gerenciamento de tarefas por meio de informações como **título, descrição, prioridade, categoria, status e prazo**, além de oferecer recursos de cadastro de usuários, login, pesquisa e filtragem.
 
@@ -18,7 +18,6 @@ O principal objetivo do projeto é desenvolver uma aplicação capaz de centrali
 
 Entre as principais funcionalidades planejadas estão:
 
-* Cadastro e login de usuários;
 * Cadastro, edição e exclusão de tarefas;
 * Definição de prioridade;
 * Organização por categorias;
@@ -80,7 +79,6 @@ O MER representa a estrutura dos dados que serão utilizados pelo sistema, apres
 
 As principais entidades são:
 
-* **USUARIO**
 * **TAREFA**
 * **CATEGORIA**
 
