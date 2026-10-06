@@ -34,12 +34,6 @@ Entre as principais funcionalidades planejadas estão:
 
 As telas foram planejadas para manter uma interface simples e objetiva, facilitando a utilização do sistema.
 
-### Tela de Login
-
-Tela responsável pela autenticação do usuário no sistema. Também possui acesso à opção de criação de uma nova conta.
-
-<img width="348" height="322" alt="image" src="https://github.com/user-attachments/assets/1e1ad92c-a121-461d-805c-22e1e156cd91" />
-
 ### Tela Principal
 
 É a tela central do sistema, onde o usuário poderá visualizar suas tarefas e utilizar as principais funções, como criar, editar, excluir e concluir tarefas.
