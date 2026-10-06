@@ -18,6 +18,7 @@ O principal objetivo do projeto é desenvolver uma aplicação capaz de centrali
 
 Entre as principais funcionalidades planejadas estão:
 
+* Cadastro e login de usuários;
 * Cadastro, edição e exclusão de tarefas;
 * Definição de prioridade;
 * Organização por categorias;
@@ -32,6 +33,12 @@ Entre as principais funcionalidades planejadas estão:
 ## Telas do sistema
 
 As telas foram planejadas para manter uma interface simples e objetiva, facilitando a utilização do sistema.
+
+### Tela de Login
+
+Tela responsável pela autenticação do usuário no sistema. Também possui acesso à opção de criação de uma nova conta.
+
+<img width="348" height="322" alt="image" src="https://github.com/user-attachments/assets/1e1ad92c-a121-461d-805c-22e1e156cd91" />
 
 ### Tela Principal
 
@@ -53,6 +60,12 @@ Tela responsável pelo gerenciamento das categorias utilizadas para organizar as
 
 <img width="329" height="426" alt="image" src="https://github.com/user-attachments/assets/6c4674c9-b9b7-4297-bf4a-65ddf0e889f3" />
 
+### Cadastro de Usuário
+
+Tela destinada à criação de novos usuários, contendo informações como nome, e-mail, login e senha.
+
+<img width="278" height="427" alt="image" src="https://github.com/user-attachments/assets/7aee4207-96d2-48d3-a850-42d3b5727f50" />
+
 ---
 
 ## Diagramas
@@ -64,6 +77,9 @@ Os diagramas foram desenvolvidos para representar a estrutura e o funcionamento 
 O diagrama de classes apresenta as principais entidades do sistema e seus respectivos atributos e métodos.
 
 As principais classes planejadas são:
+
+* **Usuario**
+<img width="134" height="212" alt="diagrama" src="https://github.com/user-attachments/assets/dd719450-a297-4271-8235-0be5c6438d78" />
 
 * **Tarefa**
 <img width="199" height="278" alt="diagrama (2)" src="https://github.com/user-attachments/assets/6ccede90-2882-43f6-b87d-7e8c78512418" />
@@ -79,6 +95,7 @@ O MER representa a estrutura dos dados que serão utilizados pelo sistema, apres
 
 As principais entidades são:
 
+* **USUARIO**
 * **TAREFA**
 * **CATEGORIA**
 
@@ -86,5 +103,4 @@ Um usuário pode possuir várias tarefas, enquanto cada tarefa pertence a um usu
 
 O modelo relacional apresenta a transformação das entidades do MER em tabelas do banco de dados, incluindo suas respectivas chaves primárias (**PK**) e chaves estrangeiras (**FK**).
 
-<img width="232" height="421" alt="DiagramaMER" src="https://github.com/user-attachments/assets/ed892669-74a9-4bf9-b23a-d9356309af00" />
-
+<img width="232" height="672" alt="DiagramaMER" src="https://github.com/user-attachments/assets/ffc7f07c-6a0e-420b-8dbd-8979be55f8bd" />
