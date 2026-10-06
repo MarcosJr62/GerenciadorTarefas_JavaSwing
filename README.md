@@ -88,5 +88,5 @@ Um usuário pode possuir várias tarefas, enquanto cada tarefa pertence a um usu
 
 O modelo relacional apresenta a transformação das entidades do MER em tabelas do banco de dados, incluindo suas respectivas chaves primárias (**PK**) e chaves estrangeiras (**FK**).
 
-<img width="232" height="672" alt="DiagramaMER" src="https://github.com/user-attachments/assets/ffc7f07c-6a0e-420b-8dbd-8979be55f8bd" />
+<img width="232" height="421" alt="DiagramaMER" src="https://github.com/user-attachments/assets/ed892669-74a9-4bf9-b23a-d9356309af00" />
 
