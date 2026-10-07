@@ -76,18 +76,57 @@ Os diagramas foram desenvolvidos para representar a estrutura e o funcionamento 
 
 O diagrama de classes apresenta as principais entidades do sistema e seus respectivos atributos e métodos.
 
-As principais classes planejadas são:
+```mermaid
+classDiagram
+    class Usuario {
+        -int idUsuario
+        -String nome
+        -String email
+        -String login
+        -String senha
+        +cadastrar()
+        +atualizar()
+        +excluir()
+        +autenticar()
+    }
+    class Tarefa {
+        -int idTarefa
+        -String titulo
+        -String descricao
+        -Date dataCriacao
+        -Date dataVencimento
+        -int idUsuario
+        -int idCategoria
+        -int idStatus
+        -int idPrioridade
+        +cadastrar()
+        +atualizar()
+        +excluir()
+        +concluir()
+    }
+    class Categoria {
+        -int idCategoria
+        -String nome
+        -String descricao
+        +cadastrar()
+        +atualizar()
+        +excluir()
+    }
+    class Status {
+        -int idStatus
+        -String nome
+    }
+    class Prioridade {
+        -int idPrioridade
+        -String nome
+    }
+    Usuario "1" --> "0..*" Tarefa : possui
+    Categoria "1" --> "0..*" Tarefa : classifica
+    Status "1" --> "0..*" Tarefa : situação
+    Prioridade "1" --> "0..*" Tarefa : prioridade
+```
 
-* **Usuario**
-<img width="134" height="212" alt="diagrama" src="https://github.com/user-attachments/assets/dd719450-a297-4271-8235-0be5c6438d78" />
-
-* **Tarefa**
-<img width="199" height="278" alt="diagrama (2)" src="https://github.com/user-attachments/assets/6ccede90-2882-43f6-b87d-7e8c78512418" />
-
-* **Categoria**
-<img width="158" height="164" alt="diagrama (1)" src="https://github.com/user-attachments/assets/32d99211-63c1-498a-874d-79d50ce6a038" />
-
-Também são representados os relacionamentos entre essas classes.
+A senha do usuário é armazenada apenas como hash (PBKDF2), nunca em texto puro.
 
 ### Modelo Entidade-Relacionamento
 
@@ -98,9 +137,61 @@ As principais entidades são:
 * **USUARIO**
 * **TAREFA**
 * **CATEGORIA**
+* **STATUS**
+* **PRIORIDADE**
 
-Um usuário pode possuir várias tarefas, enquanto cada tarefa pertence a um usuário. Da mesma forma, uma categoria pode estar relacionada a várias tarefas.
+Um usuário pode possuir várias tarefas, enquanto cada tarefa pertence a um usuário. Da mesma forma, uma categoria, um status e uma prioridade podem estar relacionados a várias tarefas.
 
 O modelo relacional apresenta a transformação das entidades do MER em tabelas do banco de dados, incluindo suas respectivas chaves primárias (**PK**) e chaves estrangeiras (**FK**).
 
-<img width="232" height="672" alt="DiagramaMER" src="https://github.com/user-attachments/assets/ffc7f07c-6a0e-420b-8dbd-8979be55f8bd" />
+```mermaid
+erDiagram
+    USUARIO ||--o{ TAREFA : possui
+    CATEGORIA |o--o{ TAREFA : classifica
+    STATUS ||--o{ TAREFA : "situação de"
+    PRIORIDADE ||--o{ TAREFA : "prioridade de"
+
+    USUARIO {
+        int id PK
+        varchar nome
+        varchar email UK
+        varchar login UK
+        varchar senha_hash
+        int tentativas_falhas
+        timestamptz bloqueado_ate
+        timestamptz data_criacao
+    }
+    TAREFA {
+        int id PK
+        varchar titulo
+        text descricao
+        timestamptz data_criacao
+        date data_vencimento
+        int usuario_id FK
+        int categoria_id FK
+        int status_id FK
+        int prioridade_id FK
+    }
+    CATEGORIA {
+        int id PK
+        varchar nome UK
+        varchar descricao
+    }
+    STATUS {
+        int id PK
+        varchar nome UK
+    }
+    PRIORIDADE {
+        int id PK
+        varchar nome UK
+    }
+```
+
+`tentativas_falhas` e `bloqueado_ate` protegem o login: após 5 senhas erradas seguidas, o acesso fica bloqueado por 5 minutos.
+
+---
+
+## Como executar
+
+1. Instale o PostgreSQL e crie o banco seguindo [banco/README.md](banco/README.md).
+2. Abra a pasta `GerenciadorTelas` no IntelliJ e execute a classe `Main` (`src/Gerenciador/view/Main.java`).
