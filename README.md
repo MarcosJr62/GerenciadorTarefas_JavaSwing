@@ -38,7 +38,7 @@ As telas foram planejadas para manter uma interface simples e objetiva, facilita
 
 Tela responsável pela autenticação do usuário no sistema. Também possui acesso à opção de criação de uma nova conta.
 
-<img width="348" height="322" alt="image" src="https://github.com/user-attachments/assets/1e1ad92c-a121-461d-805c-22e1e156cd91" />
+<img width="349" height="323" alt="login" src="https://github.com/user-attachments/assets/b348ae43-40e2-48d3-bcc2-981c9c9ea4bf" />
 
 ### Tela Principal
 
