@@ -1,0 +1,10 @@
+# Saída de compilação
+out/
+*.class
+
+# IntelliJ (configurações pessoais de cada máquina)
+.idea/workspace.xml
+.idea/shelf/
+
+# Segredos
+.env
