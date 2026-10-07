@@ -1,9 +1,11 @@
 import Gerenciador.entity.Usuario;
+import Gerenciador.usecase.CredenciaisInvalidasException;
 import Gerenciador.usecase.SenhaHash;
 import Gerenciador.usecase.UsuarioUseCase;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
@@ -16,6 +18,8 @@ public class TelaLogin extends JFrame {
     public final JButton btCriarConta = new JButton("Criar Conta");
     private final JLabel lblMensagem = new JLabel(" ", SwingConstants.CENTER);
     private final JLabel lblFoto = new JLabel(new IconeUsuario(ControleFotoPerfil.TAMANHO_ICONE));
+
+    private static final String IMAGEM_LOGIN_INVALIDO = "/imagens/login-invalido.jpg";
 
     private final UsuarioUseCase usuarioUseCase = new UsuarioUseCase();
     private final Consumer<Usuario> aoEntrar;
@@ -107,12 +111,27 @@ public class TelaLogin extends JFrame {
                 } catch (ExecutionException e) {
                     lblMensagem.setText(MensagemErro.paraTela(e.getCause()));
                     pack();
+                    if (e.getCause() instanceof CredenciaisInvalidasException) {
+                        mostrarImagemLoginInvalido();
+                    }
                     txtSenha.requestFocusInWindow();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
             }
         }.execute();
+    }
+
+    private void mostrarImagemLoginInvalido() {
+        URL imagem = TelaLogin.class.getResource(IMAGEM_LOGIN_INVALIDO);
+        if (imagem == null) {
+            // Imagem não foi copiada junto com as classes: a mensagem em vermelho já informa o erro.
+            System.err.println("[ERRO] Imagem não encontrada: " + IMAGEM_LOGIN_INVALIDO);
+            return;
+        }
+        Image reduzida = new ImageIcon(imagem).getImage().getScaledInstance(450, 360, Image.SCALE_SMOOTH);
+        JOptionPane.showMessageDialog(this, new JLabel(new ImageIcon(reduzida)),
+                lblMensagem.getText(), JOptionPane.PLAIN_MESSAGE);
     }
 
     private void ocupado(boolean sim) {

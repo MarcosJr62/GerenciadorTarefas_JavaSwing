@@ -73,14 +73,14 @@ public class UsuarioUseCase {
             throw new RegraNegocioException("Informe o usuário e a senha.");
         }
         if (senha.length > SENHA_MAX || login.length() > 50) {
-            throw new RegraNegocioException(MSG_LOGIN_INVALIDO);
+            throw new CredenciaisInvalidasException();
         }
 
         Optional<DadosLogin> encontrado = dao.buscarParaLogin(login.trim());
         if (encontrado.isEmpty()) {
             // Calcula um hash mesmo assim, para o tempo de resposta não denunciar que o login não existe.
             SenhaHash.verificar(senha, HashFicticio.VALOR);
-            throw new RegraNegocioException(MSG_LOGIN_INVALIDO);
+            throw new CredenciaisInvalidasException();
         }
 
         DadosLogin dados = encontrado.get();
@@ -90,7 +90,7 @@ public class UsuarioUseCase {
         }
         if (!SenhaHash.verificar(senha, dados.senhaHash())) {
             dao.registrarFalhaLogin(idUsuario, MAX_TENTATIVAS_LOGIN, SEGUNDOS_BLOQUEIO_LOGIN);
-            throw new RegraNegocioException(MSG_LOGIN_INVALIDO);
+            throw new CredenciaisInvalidasException();
         }
 
         dao.registrarLoginComSucesso(idUsuario);

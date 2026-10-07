@@ -31,5 +31,13 @@ $fontes = (Get-ChildItem -Recurse (Join-Path $projeto 'src') -Filter *.java).Ful
 & javac -encoding UTF-8 -d $saida -cp $driver $fontes
 if ($LASTEXITCODE -ne 0) { throw 'Erro de compilação (veja as mensagens acima).' }
 
+# Imagens e outros arquivos que não são .java precisam ir junto com as classes (o IntelliJ faz isso sozinho).
+$src = Join-Path $projeto 'src'
+Get-ChildItem -Recurse $src -File | Where-Object { $_.Extension -ne '.java' } | ForEach-Object {
+    $destino = Join-Path $saida $_.FullName.Substring($src.Length + 1)
+    New-Item -ItemType Directory -Force (Split-Path $destino) | Out-Null
+    Copy-Item $_.FullName $destino
+}
+
 Write-Host 'Abrindo o Gerenciador de Tarefas...' -ForegroundColor Green
 & java -cp "$saida;$driver" Main
