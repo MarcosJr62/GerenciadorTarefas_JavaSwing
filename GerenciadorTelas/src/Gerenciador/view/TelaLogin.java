@@ -19,7 +19,15 @@ public class TelaLogin extends JFrame {
     private final JLabel lblMensagem = new JLabel(" ", SwingConstants.CENTER);
     private final JLabel lblFoto = new JLabel(new IconeUsuario(ControleFotoPerfil.TAMANHO_ICONE));
 
-    private static final String IMAGEM_LOGIN_INVALIDO = "/imagens/login-invalido.jpg";
+    // Uma por erro de senha, na ordem; depois da última volta para a primeira.
+    private static final String[] IMAGENS_LOGIN_INVALIDO = {
+            "/imagens/login-invalido.jpg",
+            "/imagens/login-invalido-2.jpg",
+            "/imagens/login-invalido-3.jpg",
+    };
+    private static final int ALTURA_MAX_IMAGEM = 400;
+
+    private int errosDeSenha = 0;
 
     private final UsuarioUseCase usuarioUseCase = new UsuarioUseCase();
     private final Consumer<Usuario> aoEntrar;
@@ -123,13 +131,18 @@ public class TelaLogin extends JFrame {
     }
 
     private void mostrarImagemLoginInvalido() {
-        URL imagem = TelaLogin.class.getResource(IMAGEM_LOGIN_INVALIDO);
+        String caminho = IMAGENS_LOGIN_INVALIDO[errosDeSenha % IMAGENS_LOGIN_INVALIDO.length];
+        errosDeSenha++;
+        URL imagem = TelaLogin.class.getResource(caminho);
         if (imagem == null) {
             // Imagem não foi copiada junto com as classes: a mensagem em vermelho já informa o erro.
-            System.err.println("[ERRO] Imagem não encontrada: " + IMAGEM_LOGIN_INVALIDO);
+            System.err.println("[ERRO] Imagem não encontrada: " + caminho);
             return;
         }
-        Image reduzida = new ImageIcon(imagem).getImage().getScaledInstance(450, 360, Image.SCALE_SMOOTH);
+        ImageIcon original = new ImageIcon(imagem);
+        // Reduz só pela altura (-1 mantém a proporção), para imagens em pé não ficarem achatadas.
+        int altura = Math.min(original.getIconHeight(), ALTURA_MAX_IMAGEM);
+        Image reduzida = original.getImage().getScaledInstance(-1, altura, Image.SCALE_SMOOTH);
         JOptionPane.showMessageDialog(this, new JLabel(new ImageIcon(reduzida)),
                 lblMensagem.getText(), JOptionPane.PLAIN_MESSAGE);
     }
