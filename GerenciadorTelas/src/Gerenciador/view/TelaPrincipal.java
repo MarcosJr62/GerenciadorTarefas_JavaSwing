@@ -8,6 +8,7 @@ public class TelaPrincipal extends JFrame {
     public final JButton btEditar = new JButton("Editar");
     public final JButton btExcluir = new JButton("Excluir");
     public final JButton btConcluir = new JButton("Concluir");
+    public final JLabel lblFotoPerfil = new JLabel();
 
     public final JComboBox<String> cbStatus =
             new JComboBox<>(new String[]{"Todas", "Pendente", "Em andamento", "Concluída"});
@@ -43,12 +44,26 @@ public class TelaPrincipal extends JFrame {
         add(new JScrollPane(tabela), BorderLayout.CENTER);
     }
 
+    /** Mostra a foto no canto superior direito; null mostra o avatar padrão. */
+    public void mostrarFotoPerfil(Icon foto) {
+        lblFotoPerfil.setIcon(foto != null ? foto : new IconeUsuario(ControleFotoPerfil.TAMANHO_ICONE));
+    }
+
     private JPanel painelBotoes() {
-        JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 10));
-        p.add(btNovaTarefa);
-        p.add(btEditar);
-        p.add(btExcluir);
-        p.add(btConcluir);
+        JPanel botoes = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 10));
+        botoes.add(btNovaTarefa);
+        botoes.add(btEditar);
+        botoes.add(btExcluir);
+        botoes.add(btConcluir);
+
+        lblFotoPerfil.setBorder(BorderFactory.createEmptyBorder(4, 0, 0, 12));
+        lblFotoPerfil.setToolTipText("Foto de perfil (clique para alterar)");
+        lblFotoPerfil.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        mostrarFotoPerfil(null);
+
+        JPanel p = new JPanel(new BorderLayout());
+        p.add(botoes, BorderLayout.CENTER);
+        p.add(lblFotoPerfil, BorderLayout.EAST);
         return p;
     }
 

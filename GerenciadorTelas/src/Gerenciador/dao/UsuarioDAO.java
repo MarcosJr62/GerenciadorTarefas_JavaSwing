@@ -84,6 +84,33 @@ public class UsuarioDAO {
         }
     }
 
+    public void salvarFoto(int idUsuario, byte[] png) throws SQLException {
+        String sql = "UPDATE usuario SET foto_perfil = ? WHERE id = ?";
+        try (Connection c = ConexaoBD.abrir(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setBytes(1, png);
+            ps.setInt(2, idUsuario);
+            ps.executeUpdate();
+        }
+    }
+
+    public void removerFoto(int idUsuario) throws SQLException {
+        String sql = "UPDATE usuario SET foto_perfil = NULL WHERE id = ?";
+        try (Connection c = ConexaoBD.abrir(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, idUsuario);
+            ps.executeUpdate();
+        }
+    }
+
+    public Optional<byte[]> buscarFoto(int idUsuario) throws SQLException {
+        String sql = "SELECT foto_perfil FROM usuario WHERE id = ?";
+        try (Connection c = ConexaoBD.abrir(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, idUsuario);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? Optional.ofNullable(rs.getBytes(1)) : Optional.empty();
+            }
+        }
+    }
+
     private boolean existe(String sql, String valor) throws SQLException {
         try (Connection c = ConexaoBD.abrir(); PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, valor);

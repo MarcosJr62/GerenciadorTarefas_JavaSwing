@@ -1,5 +1,3 @@
-package Gerenciador.view;
-
 import Gerenciador.entity.Categoria;
 import Gerenciador.usecase.CategoriaUseCase;
 import Gerenciador.usecase.RegraNegocioException;

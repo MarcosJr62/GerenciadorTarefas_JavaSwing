@@ -1,5 +1,6 @@
 import Gerenciador.usecase.RegraNegocioException;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 /**
@@ -18,6 +19,9 @@ public final class MensagemErro {
         System.err.println("[ERRO] " + erro);
         if (erro instanceof SQLException) {
             return "Não foi possível acessar o banco de dados. Verifique se o PostgreSQL está rodando.";
+        }
+        if (erro instanceof IOException) {
+            return "Não foi possível ler o arquivo escolhido.";
         }
         if (erro instanceof IllegalStateException && String.valueOf(erro.getMessage()).contains("DB_PASSWORD")) {
             return "Banco de dados não configurado (variável DB_PASSWORD). Veja banco/README.md.";

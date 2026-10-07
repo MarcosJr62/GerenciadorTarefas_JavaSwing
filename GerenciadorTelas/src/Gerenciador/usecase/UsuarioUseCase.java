@@ -1,9 +1,12 @@
 package Gerenciador.usecase;
 
+import Gerenciador.dao.UltimaFotoLocal;
 import Gerenciador.dao.UsuarioDAO;
 import Gerenciador.dao.UsuarioDAO.DadosLogin;
 import Gerenciador.entity.Usuario;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -92,6 +95,49 @@ public class UsuarioUseCase {
 
         dao.registrarLoginComSucesso(idUsuario);
         return dados.usuario();
+    }
+
+    /** Sempre altera a foto do usuário logado, nunca de um id vindo de fora. */
+    public byte[] alterarFotoPerfil(Path arquivo) throws RegraNegocioException, IOException, SQLException {
+        byte[] png = FotoPerfil.preparar(arquivo);
+        dao.salvarFoto(Sessao.getUsuarioLogado().getIdUsuario(), png);
+        lembrarNestePc(Optional.of(png));
+        return png;
+    }
+
+    public void removerFotoPerfil() throws SQLException {
+        dao.removerFoto(Sessao.getUsuarioLogado().getIdUsuario());
+        lembrarNestePc(Optional.empty());
+    }
+
+    /** Também deixa a foto guardada neste PC, para a próxima tela de login mostrar. */
+    public Optional<byte[]> buscarFotoPerfil() throws SQLException {
+        Optional<byte[]> foto = dao.buscarFoto(Sessao.getUsuarioLogado().getIdUsuario());
+        lembrarNestePc(foto);
+        return foto;
+    }
+
+    /** Foto do último usuário que entrou neste PC (vazia se ele não tinha foto). */
+    public Optional<byte[]> buscarUltimaFotoNestePc() {
+        try {
+            return UltimaFotoLocal.ler();
+        } catch (IOException e) {
+            System.err.println("[ERRO] " + e);
+            return Optional.empty();
+        }
+    }
+
+    // A cópia local é só conveniência: se falhar, a foto no banco já foi salva e o erro não chega à tela.
+    private static void lembrarNestePc(Optional<byte[]> foto) {
+        try {
+            if (foto.isPresent()) {
+                UltimaFotoLocal.salvar(foto.get());
+            } else {
+                UltimaFotoLocal.apagar();
+            }
+        } catch (IOException e) {
+            System.err.println("[ERRO] " + e);
+        }
     }
 
     static String mensagemBloqueio(int segundos) {

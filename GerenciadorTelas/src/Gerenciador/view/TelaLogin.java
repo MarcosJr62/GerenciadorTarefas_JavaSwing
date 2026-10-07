@@ -4,7 +4,7 @@ import Gerenciador.usecase.UsuarioUseCase;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
@@ -15,6 +15,7 @@ public class TelaLogin extends JFrame {
     public final JButton btEntrar = new JButton("Entrar");
     public final JButton btCriarConta = new JButton("Criar Conta");
     private final JLabel lblMensagem = new JLabel(" ", SwingConstants.CENTER);
+    private final JLabel lblFoto = new JLabel(new IconeUsuario(ControleFotoPerfil.TAMANHO_ICONE));
 
     private final UsuarioUseCase usuarioUseCase = new UsuarioUseCase();
     private final Consumer<Usuario> aoEntrar;
@@ -29,7 +30,7 @@ public class TelaLogin extends JFrame {
         conteudo.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
         conteudo.add(centralizado(cabecalho()));
         conteudo.add(Box.createVerticalStrut(15));
-        conteudo.add(centralizado(new JLabel(new IconeUsuario(48))));
+        conteudo.add(centralizado(lblFoto));
         conteudo.add(Box.createVerticalStrut(15));
         conteudo.add(centralizado(formulario()));
         conteudo.add(Box.createVerticalStrut(8));
@@ -50,6 +51,33 @@ public class TelaLogin extends JFrame {
         pack();
         setResizable(false);
         setLocationRelativeTo(null);
+        mostrarUltimaFoto();
+    }
+
+    /** Troca o ícone padrão pela foto de quem entrou por último neste PC, se ele tinha uma. */
+    private void mostrarUltimaFoto() {
+        new SwingWorker<ImageIcon, Void>() {
+            @Override
+            protected ImageIcon doInBackground() throws Exception {
+                Optional<byte[]> png = usuarioUseCase.buscarUltimaFotoNestePc();
+                return png.isPresent() ? ControleFotoPerfil.paraIcone(png.get()) : null;
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    ImageIcon foto = get();
+                    if (foto != null) {
+                        lblFoto.setIcon(foto);
+                    }
+                } catch (ExecutionException e) {
+                    // Cópia local ilegível: fica o ícone padrão.
+                    MensagemErro.paraTela(e.getCause());
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }.execute();
     }
 
     private void entrar() {
@@ -95,7 +123,7 @@ public class TelaLogin extends JFrame {
     }
 
     private JComponent cabecalho() {
-        JLabel titulo = new JLabel("<html><center>TASK MANAGER<br>Gerenciador de Tarefas</center></html>",
+        JLabel titulo = new JLabel("Gerenciador de Tarefas",
                 SwingConstants.CENTER);
         titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 14f));
         titulo.setBorder(BorderFactory.createCompoundBorder(
@@ -134,39 +162,5 @@ public class TelaLogin extends JFrame {
         JPanel linha = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         linha.add(componente);
         return linha;
-    }
-
-    /** Ícone de usuário desenhado no código, para não depender de arquivo de imagem. */
-    private static final class IconeUsuario implements Icon {
-        private final int tamanho;
-
-        IconeUsuario(int tamanho) {
-            this.tamanho = tamanho;
-        }
-
-        @Override
-        public void paintIcon(Component c, Graphics g, int x, int y) {
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(Color.DARK_GRAY);
-            g2.setStroke(new BasicStroke(3f));
-            float t = tamanho;
-            g2.draw(new Ellipse2D.Float(x + 2, y + 2, t - 4, t - 4));
-            g2.draw(new Ellipse2D.Float(x + t * 0.35f, y + t * 0.2f, t * 0.3f, t * 0.3f));
-            Shape circulo = new Ellipse2D.Float(x + 2, y + 2, t - 4, t - 4);
-            g2.setClip(circulo);
-            g2.draw(new Ellipse2D.Float(x + t * 0.2f, y + t * 0.58f, t * 0.6f, t * 0.6f));
-            g2.dispose();
-        }
-
-        @Override
-        public int getIconWidth() {
-            return tamanho;
-        }
-
-        @Override
-        public int getIconHeight() {
-            return tamanho;
-        }
     }
 }

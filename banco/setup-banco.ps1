@@ -1,4 +1,4 @@
-﻿# Cria o banco gerenciador_tarefas e roda os 3 scripts SQL.
+﻿# Cria o banco gerenciador_tarefas e roda os 4 scripts SQL.
 # Uso (na raiz do repositório):  powershell -ExecutionPolicy Bypass -File banco\setup-banco.ps1
 
 $ErrorActionPreference = 'Stop'
@@ -35,6 +35,7 @@ try {
     $env:PGPASSWORD = $senhaApp
     Rodar-Sql 'gerenciador_app' 'gerenciador_tarefas' 'sql\02_schema.sql'
     Rodar-Sql 'gerenciador_app' 'gerenciador_tarefas' 'sql\03_seed.sql'
+    Rodar-Sql 'gerenciador_app' 'gerenciador_tarefas' 'sql\04_foto_perfil.sql'
 
     Write-Host "`n>> Tabelas criadas:" -ForegroundColor Cyan
     & $psql -h localhost -U gerenciador_app -d gerenciador_tarefas -c '\dt'

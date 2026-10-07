@@ -32,7 +32,7 @@ Algumas regras que o próprio banco garante:
 
 | Tabela       | Colunas |
 |--------------|---------|
-| `usuario`    | id, nome, email, login, senha_hash, tentativas_falhas, bloqueado_ate, data_criacao |
+| `usuario`    | id, nome, email, login, senha_hash, tentativas_falhas, bloqueado_ate, data_criacao, foto_perfil |
 | `tarefa`     | id, titulo, descricao, data_criacao, data_vencimento, usuario_id, categoria_id, status_id, prioridade_id |
 | `categoria`  | id, nome, descricao |
 | `status`     | id, nome |

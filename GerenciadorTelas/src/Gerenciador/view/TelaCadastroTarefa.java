@@ -16,7 +16,8 @@ public class TelaCadastroTarefa extends JDialog {
     public final JButton btSalvar = new JButton("SALVAR");
     public final JButton btCancelar = new JButton("CANCELAR");
 
-    public TelaCadastroTarefa(JFrame pai) {
+    /** @param fotoPerfil foto do usuário logado, exibida no canto superior direito (pode ser null). */
+    public TelaCadastroTarefa(JFrame pai, Icon fotoPerfil) {
         super(pai, "Nova Tarefa", true);
 
         JFormattedTextField data;
@@ -33,8 +34,7 @@ public class TelaCadastroTarefa extends JDialog {
         cbPrioridade.setSelectedItem("Média");
         cbCategoria.setSelectedItem("Estudos");
 
-        JLabel cabecalho = new JLabel("NOVA TAREFA", SwingConstants.CENTER);
-        cabecalho.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JPanel cabecalho = cabecalho(fotoPerfil);
 
         txtDescricao.setLineWrap(true);
         txtDescricao.setWrapStyleWord(true);
@@ -62,6 +62,18 @@ public class TelaCadastroTarefa extends JDialog {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         btCancelar.addActionListener(e -> dispose());
+    }
+
+    private static JPanel cabecalho(Icon fotoPerfil) {
+        JPanel painel = new JPanel(new BorderLayout());
+        painel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        painel.add(new JLabel("NOVA TAREFA", SwingConstants.CENTER), BorderLayout.CENTER);
+        if (fotoPerfil != null) {
+            painel.add(new JLabel(fotoPerfil), BorderLayout.EAST);
+            // Espaço do mesmo tamanho à esquerda, para o título continuar centralizado.
+            painel.add(Box.createHorizontalStrut(fotoPerfil.getIconWidth()), BorderLayout.WEST);
+        }
+        return painel;
     }
 
     private void linha(JPanel p, int y, String rotulo, JComponent campo, boolean expandir) {
