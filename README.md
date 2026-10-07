@@ -194,4 +194,12 @@ erDiagram
 ## Como executar
 
 1. Instale o PostgreSQL e crie o banco seguindo [banco/README.md](banco/README.md).
-2. Abra a pasta `GerenciadorTelas` no IntelliJ e execute a classe `Main` (`src/Gerenciador/view/Main.java`).
+2. Rode o sistema de um destes jeitos:
+   - **Pelo terminal (VS Code ou qualquer outro)**, na raiz do repositório:
+
+     ```powershell
+     powershell -ExecutionPolicy Bypass -File executar.ps1
+     ```
+
+     O script compila o projeto e abre a tela de login. Precisa do JDK 17 ou superior instalado.
+   - **Pelo IntelliJ:** abra a pasta `GerenciadorTelas` e execute a classe `Main` (`src/Gerenciador/view/Main.java`).
