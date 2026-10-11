@@ -1,22 +1,28 @@
+package Gerenciador.view;
+import Gerenciador.entity.Categoria;
+import Gerenciador.entity.Tarefa;
+
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class TelaCadastroTarefa extends JDialog {
 
     public final JTextField txtTitulo = new JTextField(20);
     public final JTextArea txtDescricao = new JTextArea(5, 20);
     public final JComboBox<String> cbPrioridade = new JComboBox<>(new String[]{"Alta", "Média", "Baixa"});
-    public final JComboBox<String> cbCategoria =
-            new JComboBox<>(new String[]{"Faculdade", "Trabalho", "Pessoal", "Estudos"});
+    public final JComboBox<Categoria> cbCategoria = new JComboBox<>();
     public final JFormattedTextField txtDataLimite;
     public final JComboBox<String> cbStatus =
             new JComboBox<>(new String[]{"Pendente", "Em andamento", "Concluída"});
     public final JButton btSalvar = new JButton("SALVAR");
     public final JButton btCancelar = new JButton("CANCELAR");
 
-    /** @param fotoPerfil foto do usuário logado, exibida no canto superior direito (pode ser null). */
+    private final JLabel lblTitulo = new JLabel("NOVA TAREFA", SwingConstants.CENTER);
+
     public TelaCadastroTarefa(JFrame pai, Icon fotoPerfil) {
         super(pai, "Nova Tarefa", true);
 
@@ -32,7 +38,6 @@ public class TelaCadastroTarefa extends JDialog {
         txtDataLimite = data;
 
         cbPrioridade.setSelectedItem("Média");
-        cbCategoria.setSelectedItem("Estudos");
 
         JPanel cabecalho = cabecalho(fotoPerfil);
 
@@ -64,13 +69,38 @@ public class TelaCadastroTarefa extends JDialog {
         btCancelar.addActionListener(e -> dispose());
     }
 
-    private static JPanel cabecalho(Icon fotoPerfil) {
+    public void carregarCategorias(List<Categoria> categorias) {
+        cbCategoria.removeAllItems();
+        cbCategoria.addItem(new Categoria(0, "(Sem categoria)"));
+        for (Categoria c : categorias) {
+            cbCategoria.addItem(c);
+        }
+    }
+
+    public void preencher(Tarefa t) {
+        setTitle("Editar Tarefa");
+        lblTitulo.setText("EDITAR TAREFA");
+        txtTitulo.setText(t.getTitulo());
+        txtDescricao.setText(t.getDescricao());
+        cbPrioridade.setSelectedItem(t.getPrioridade());
+        cbStatus.setSelectedItem(t.getStatus());
+        for (int i = 0; i < cbCategoria.getItemCount(); i++) {
+            if (cbCategoria.getItemAt(i).getId() == t.getIdCategoria()) {
+                cbCategoria.setSelectedIndex(i);
+                break;
+            }
+        }
+        if (t.getDataVencimento() != null) {
+            txtDataLimite.setText(new SimpleDateFormat("dd/MM/yy").format(t.getDataVencimento()));
+        }
+    }
+
+    private JPanel cabecalho(Icon fotoPerfil) {
         JPanel painel = new JPanel(new BorderLayout());
         painel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        painel.add(new JLabel("NOVA TAREFA", SwingConstants.CENTER), BorderLayout.CENTER);
+        painel.add(lblTitulo, BorderLayout.CENTER);
         if (fotoPerfil != null) {
             painel.add(new JLabel(fotoPerfil), BorderLayout.EAST);
-            // Espaço do mesmo tamanho à esquerda, para o título continuar centralizado.
             painel.add(Box.createHorizontalStrut(fotoPerfil.getIconWidth()), BorderLayout.WEST);
         }
         return painel;
