@@ -1,3 +1,4 @@
+package Gerenciador.view;
 import Gerenciador.entity.Usuario;
 import Gerenciador.usecase.CredenciaisInvalidasException;
 import Gerenciador.usecase.SenhaHash;
@@ -19,7 +20,6 @@ public class TelaLogin extends JFrame {
     private final JLabel lblMensagem = new JLabel(" ", SwingConstants.CENTER);
     private final JLabel lblFoto = new JLabel(new IconeUsuario(ControleFotoPerfil.TAMANHO_ICONE));
 
-    // Uma por erro de senha, na ordem; depois da última volta para a primeira.
     private static final String[] IMAGENS_LOGIN_INVALIDO = {
             "/imagens/login-invalido.jpg",
             "/imagens/login-invalido-2.jpg",
@@ -66,7 +66,6 @@ public class TelaLogin extends JFrame {
         mostrarUltimaFoto();
     }
 
-    /** Troca o ícone padrão pela foto de quem entrou por último neste PC, se ele tinha uma. */
     private void mostrarUltimaFoto() {
         new SwingWorker<ImageIcon, Void>() {
             @Override
@@ -135,12 +134,10 @@ public class TelaLogin extends JFrame {
         errosDeSenha++;
         URL imagem = TelaLogin.class.getResource(caminho);
         if (imagem == null) {
-            // Imagem não foi copiada junto com as classes: a mensagem em vermelho já informa o erro.
             System.err.println("[ERRO] Imagem não encontrada: " + caminho);
             return;
         }
         ImageIcon original = new ImageIcon(imagem);
-        // Reduz só pela altura (-1 mantém a proporção), para imagens em pé não ficarem achatadas.
         int altura = Math.min(original.getIconHeight(), ALTURA_MAX_IMAGEM);
         Image reduzida = original.getImage().getScaledInstance(-1, altura, Image.SCALE_SMOOTH);
         JOptionPane.showMessageDialog(this, new JLabel(new ImageIcon(reduzida)),
