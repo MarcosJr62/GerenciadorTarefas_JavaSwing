@@ -1,3 +1,4 @@
+package Gerenciador.view;
 import Gerenciador.usecase.RegraNegocioException;
 
 import java.io.IOException;
