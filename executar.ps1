@@ -40,4 +40,4 @@ Get-ChildItem -Recurse $src -File | Where-Object { $_.Extension -ne '.java' } | 
 }
 
 Write-Host 'Abrindo o Gerenciador de Tarefas...' -ForegroundColor Green
-& java -cp "$saida;$driver" Main
+& java -cp "$saida;$driver" Gerenciador.view.Main
