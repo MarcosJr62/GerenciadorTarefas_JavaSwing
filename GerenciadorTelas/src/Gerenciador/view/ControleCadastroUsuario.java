@@ -1,3 +1,4 @@
+package Gerenciador.view;
 import Gerenciador.entity.Usuario;
 import Gerenciador.usecase.SenhaHash;
 import Gerenciador.usecase.UsuarioUseCase;
@@ -6,13 +7,11 @@ import javax.swing.*;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
-/** Liga a TelaCadastroUsuario (layout feito pelo grupo) ao cadastro no banco. */
 public final class ControleCadastroUsuario {
 
     private ControleCadastroUsuario() {
     }
 
-    /** @param aoCadastrar recebe o login criado (pode ser null). */
     public static void abrir(JFrame pai, Consumer<String> aoCadastrar) {
         TelaCadastroUsuario tela = new TelaCadastroUsuario(pai);
         UsuarioUseCase usuarioUseCase = new UsuarioUseCase();
