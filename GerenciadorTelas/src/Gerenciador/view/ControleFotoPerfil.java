@@ -1,3 +1,4 @@
+package Gerenciador.view;
 import Gerenciador.usecase.UsuarioUseCase;
 
 import javax.imageio.ImageIO;
@@ -14,7 +15,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
-/** Escolhe a foto de perfil do usuário logado e guarda a versão já carregada durante a sessão. */
 public final class ControleFotoPerfil {
 
     public static final int TAMANHO_ICONE = 48;
@@ -23,7 +23,6 @@ public final class ControleFotoPerfil {
     private final Consumer<ImageIcon> aoMudarFoto;
     private ImageIcon foto;
 
-    /** @param aoMudarFoto avisado quando a foto é carregada, trocada ou removida (recebe null sem foto). */
     public ControleFotoPerfil(Consumer<ImageIcon> aoMudarFoto) {
         this.aoMudarFoto = aoMudarFoto;
     }
@@ -33,7 +32,6 @@ public final class ControleFotoPerfil {
         aoMudarFoto.accept(novaFoto);
     }
 
-    /** Foto redonda pronta para exibir, ou null se o usuário ainda não escolheu uma. */
     public ImageIcon getFoto() {
         return foto;
     }
@@ -59,7 +57,6 @@ public final class ControleFotoPerfil {
         }.execute();
     }
 
-    /** Janela com a foto atual e os botões de escolher ou remover. */
     public void abrir(JFrame pai) {
         String escolher = "Escolher foto...";
         String remover = "Remover foto";
@@ -104,7 +101,6 @@ public final class ControleFotoPerfil {
         executar(pai, () -> paraIcone(usuarioUseCase.alterarFotoPerfil(arquivo)), "Foto de perfil atualizada!");
     }
 
-    /** Roda a alteração fora da tela e, se der certo, troca a foto em memória pelo resultado (null = sem foto). */
     private void executar(JFrame pai, Callable<ImageIcon> alteracao, String mensagemSucesso) {
         pai.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
@@ -131,7 +127,6 @@ public final class ControleFotoPerfil {
         }.execute();
     }
 
-    /** Foto do usuário, ou o ícone de avatar padrão se ele não tiver foto. */
     public Icon getFotoOuAvatar() {
         return foto != null ? foto : new IconeUsuario(TAMANHO_ICONE);
     }
@@ -144,7 +139,6 @@ public final class ControleFotoPerfil {
         return new ImageIcon(recortarCirculo(imagem, TAMANHO_ICONE));
     }
 
-    // Desenha o círculo com antialiasing e depois "pinta" a foto só dentro dele, para a borda não serrilhar.
     private static BufferedImage recortarCirculo(BufferedImage imagem, int tamanho) {
         BufferedImage redonda = new BufferedImage(tamanho, tamanho, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = redonda.createGraphics();
