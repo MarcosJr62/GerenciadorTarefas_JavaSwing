@@ -1,3 +1,4 @@
+package Gerenciador.view;
 import javax.swing.*;
 import java.awt.*;
 
