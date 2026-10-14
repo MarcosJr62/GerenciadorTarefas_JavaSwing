@@ -8,42 +8,59 @@ import java.util.List;
 public class CategoriaDAO {
 
     public void inseri(Categoria categoria) throws SQLException {
-        String sql = "INSERT INTO categoria (nome) VALUES (?)";
+        String sql = "INSERT INTO categoria (nome, descricao) VALUES (?, ?)";
         try (Connection conn = ConexaoBD.abrir();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setString(1, categoria.getNome());
+            ps.setString(2, categoria.getDescricao());
             ps.executeUpdate();
 
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
-                    categoria.setId(rs.getInt(1));
+                    categoria.setIdCategoria(rs.getInt(1));
                 }
             }
         }
     }
 
+    public void atualizar(Categoria categoria) throws SQLException {
+        String sql = "UPDATE categoria SET nome = ?, descricao = ? WHERE id = ?";
+        try (Connection conn = ConexaoBD.abrir();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, categoria.getNome());
+            ps.setString(2, categoria.getDescricao());
+            ps.setInt(3, categoria.getIdCategoria());
+            ps.executeUpdate();
+        }
+    }
+
     public List<Categoria> listarTodas() throws SQLException {
         List<Categoria> lista = new ArrayList<>();
-        String sql = "SELECT id, nome FROM categoria ORDER BY id";
+        String sql = "SELECT id, nome, descricao FROM categoria ORDER BY id";
 
         try (Connection conn = ConexaoBD.abrir();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                lista.add(new Categoria(rs.getInt("id"), rs.getString("nome")));
+                lista.add(new Categoria(
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getString("descricao")
+                ));
             }
         }
         return lista;
     }
 
-    public void deletar(int id) throws SQLException {
+    public void deletar(int idCategoria) throws SQLException {
         String sql = "DELETE FROM categoria WHERE id = ?";
         try (Connection conn = ConexaoBD.abrir();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, id);
+            ps.setInt(1, idCategoria);
             ps.executeUpdate();
         }
     }
