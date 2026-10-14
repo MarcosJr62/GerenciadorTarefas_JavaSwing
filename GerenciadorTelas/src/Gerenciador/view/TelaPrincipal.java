@@ -1,6 +1,7 @@
 package Gerenciador.view;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
@@ -42,15 +43,17 @@ public class TelaPrincipal extends JFrame {
         tabela.setRowHeight(26);
         tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tabela.getColumnModel().getColumn(0).setMaxWidth(50);
+        tabela.getColumnModel().getColumn(4).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            protected void setValue(Object valor) {
+                super.setValue(valor);
+                setIcon(IconeStatus.para((String) valor));
+                setIconTextGap(6);
+            }
+        });
 
         add(topo, BorderLayout.NORTH);
         add(new JScrollPane(tabela), BorderLayout.CENTER);
-
-        // Ação para abrir a TelaCategorias
-        btCategorias.addActionListener(e -> {
-            TelaCategorias telaCat = new TelaCategorias(this);
-            telaCat.setVisible(true);
-        });
     }
 
     /** Mostra a foto no canto superior direito; null mostra o avatar padrão. */

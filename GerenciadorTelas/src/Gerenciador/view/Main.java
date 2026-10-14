@@ -35,7 +35,7 @@ public class Main {
                 JMenuBar barraMenu = new JMenuBar();
                 JMenu menuTelas = new JMenu("Telas");
                 JMenuItem itemCategorias = new JMenuItem("Categorias");
-                itemCategorias.addActionListener(e -> new TelaCategorias(telaPrincipal).setVisible(true));
+                itemCategorias.addActionListener(e -> controleTarefas.abrirCategorias());
                 menuTelas.add(itemCategorias);
                 barraMenu.add(menuTelas);
                 telaPrincipal.setJMenuBar(barraMenu);

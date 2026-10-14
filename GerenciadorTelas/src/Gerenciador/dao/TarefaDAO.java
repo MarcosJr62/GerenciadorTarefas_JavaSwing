@@ -7,10 +7,19 @@ import java.util.List;
 
 public class TarefaDAO {
 
+    // A tarefa trabalha com o nome ("Alta", "Pendente"); o id é resolvido no banco pelas tabelas de domínio.
+    // Nome desconhecido vira NULL e é barrado pelo NOT NULL da coluna.
+    private static final String ID_PRIORIDADE_POR_NOME = "(SELECT id FROM prioridade WHERE nome = ?)";
+    private static final String ID_STATUS_POR_NOME = "(SELECT id FROM status WHERE nome = ?)";
+
     public List<Tarefa> listar(int idUsuario) throws SQLException {
         List<Tarefa> lista = new ArrayList<>();
-        String sql = "SELECT id, titulo, descricao, prioridade_id, status_id, data_criacao, data_vencimento, usuario_id, categoria_id " +
-                "FROM tarefa WHERE usuario_id = ? ORDER BY id";
+        String sql = "SELECT t.id, t.titulo, t.descricao, p.nome AS prioridade, s.nome AS status, " +
+                "t.data_criacao, t.data_vencimento, t.usuario_id, t.categoria_id " +
+                "FROM tarefa t " +
+                "JOIN prioridade p ON p.id = t.prioridade_id " +
+                "JOIN status s ON s.id = t.status_id " +
+                "WHERE t.usuario_id = ? ORDER BY t.id";
 
         try (Connection conn = ConexaoBD.abrir();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -26,14 +35,14 @@ public class TarefaDAO {
 
     public void inserir(Tarefa tarefa) throws SQLException {
         String sql = "INSERT INTO tarefa (titulo, descricao, prioridade_id, status_id, data_vencimento, usuario_id, categoria_id) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                "VALUES (?, ?, " + ID_PRIORIDADE_POR_NOME + ", " + ID_STATUS_POR_NOME + ", ?, ?, ?)";
         try (Connection conn = ConexaoBD.abrir();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setString(1, tarefa.getTitulo());
             ps.setString(2, tarefa.getDescricao());
-            ps.setInt(3, parseId(tarefa.getPrioridade(), 1));
-            ps.setInt(4, parseId(tarefa.getStatus(), 1));
+            ps.setString(3, tarefa.getPrioridade());
+            ps.setString(4, tarefa.getStatus());
 
             if (tarefa.getDataVencimento() != null) {
                 ps.setDate(5, new java.sql.Date(tarefa.getDataVencimento().getTime()));
@@ -60,15 +69,16 @@ public class TarefaDAO {
     }
 
     public void atualizar(Tarefa tarefa) throws SQLException {
-        String sql = "UPDATE tarefa SET titulo = ?, descricao = ?, prioridade_id = ?, status_id = ?, data_vencimento = ?, categoria_id = ? " +
+        String sql = "UPDATE tarefa SET titulo = ?, descricao = ?, prioridade_id = " + ID_PRIORIDADE_POR_NOME +
+                ", status_id = " + ID_STATUS_POR_NOME + ", data_vencimento = ?, categoria_id = ? " +
                 "WHERE id = ? AND usuario_id = ?";
         try (Connection conn = ConexaoBD.abrir();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, tarefa.getTitulo());
             ps.setString(2, tarefa.getDescricao());
-            ps.setInt(3, parseId(tarefa.getPrioridade(), 1));
-            ps.setInt(4, parseId(tarefa.getStatus(), 1));
+            ps.setString(3, tarefa.getPrioridade());
+            ps.setString(4, tarefa.getStatus());
 
             if (tarefa.getDataVencimento() != null) {
                 ps.setDate(5, new java.sql.Date(tarefa.getDataVencimento().getTime()));
@@ -89,7 +99,8 @@ public class TarefaDAO {
     }
 
     public void concluir(int idTarefa, int idUsuario) throws SQLException {
-        String sql = "UPDATE tarefa SET status_id = 3 WHERE id = ? AND usuario_id = ?";
+        String sql = "UPDATE tarefa SET status_id = (SELECT id FROM status WHERE nome = 'Concluída') " +
+                "WHERE id = ? AND usuario_id = ?";
         try (Connection conn = ConexaoBD.abrir();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, idTarefa);
@@ -108,34 +119,13 @@ public class TarefaDAO {
         }
     }
 
-    private int parseId(String valor, int padrao) {
-        if (valor == null || valor.trim().isEmpty()) {
-            return padrao;
-        }
-        try {
-            return Integer.parseInt(valor.trim());
-        } catch (NumberFormatException e) {
-            switch (valor.trim().toLowerCase()) {
-                case "baixa": return 1;
-                case "média":
-                case "media": return 2;
-                case "alta": return 3;
-                case "pendente": return 1;
-                case "em andamento": return 2;
-                case "concluída":
-                case "concluida": return 3;
-                default: return padrao;
-            }
-        }
-    }
-
     private Tarefa mapearTarefa(ResultSet rs) throws SQLException {
         Tarefa t = new Tarefa();
         t.setIdTarefa(rs.getInt("id"));
         t.setTitulo(rs.getString("titulo"));
         t.setDescricao(rs.getString("descricao"));
-        t.setPrioridade(String.valueOf(rs.getInt("prioridade_id")));
-        t.setStatus(String.valueOf(rs.getInt("status_id")));
+        t.setPrioridade(rs.getString("prioridade"));
+        t.setStatus(rs.getString("status"));
 
         Timestamp dataCriacao = rs.getTimestamp("data_criacao");
         if (dataCriacao != null) {

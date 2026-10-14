@@ -64,7 +64,7 @@ public class CategoriaUseCase {
         try {
             categoriaDAO.deletar(idCategoria);
         } catch (SQLException e) {
-            throw new RegraNegocioException("Não é possível excluir a categoria pois ela está vinculada a tarefas existentes.");
+            throw new RegraNegocioException("Erro ao excluir a categoria no banco de dados.");
         }
     }
 }

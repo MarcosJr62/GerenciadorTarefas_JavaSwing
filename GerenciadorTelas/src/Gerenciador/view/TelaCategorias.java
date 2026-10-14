@@ -27,11 +27,14 @@ public class TelaCategorias extends JDialog {
     public final JTable tabela = new JTable(modelo);
 
     private final CategoriaUseCase categoriaUseCase;
+    private final Runnable aoAlterar;
     private Integer idCategoriaEmEdicao = null;
 
-    public TelaCategorias(JFrame pai) {
+    /** aoAlterar roda após cada cadastro, edição ou exclusão, para a tela principal se atualizar na hora. */
+    public TelaCategorias(JFrame pai, Runnable aoAlterar) {
         super(pai, "Categorias", true);
         this.categoriaUseCase = new CategoriaUseCase();
+        this.aoAlterar = aoAlterar;
 
         JLabel cabecalho = new JLabel("GERENCIADOR DE CATEGORIAS", SwingConstants.CENTER);
         cabecalho.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -107,6 +110,7 @@ public class TelaCategorias extends JDialog {
             txtNome.setText("");
             txtDescricao.setText("");
             atualizarTabela();
+            aoAlterar.run();
         } catch (RegraNegocioException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Aviso", JOptionPane.WARNING_MESSAGE);
         }
@@ -138,7 +142,7 @@ public class TelaCategorias extends JDialog {
 
         int confirmacao = JOptionPane.showConfirmDialog(
                 this,
-                "Deseja realmente excluir a categoria '" + nome + "'?",
+                "Deseja realmente excluir a categoria '" + nome + "'?\nAs tarefas dela ficarão sem categoria.",
                 "Confirmação",
                 JOptionPane.YES_NO_OPTION
         );
@@ -151,6 +155,7 @@ public class TelaCategorias extends JDialog {
                 idCategoriaEmEdicao = null;
                 btCadastrar.setText("Cadastrar");
                 atualizarTabela();
+                aoAlterar.run();
             } catch (RegraNegocioException e) {
                 JOptionPane.showMessageDialog(this, e.getMessage(), "Erro ao Excluir", JOptionPane.ERROR_MESSAGE);
             }

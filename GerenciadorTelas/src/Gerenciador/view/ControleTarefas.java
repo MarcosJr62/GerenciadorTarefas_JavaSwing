@@ -41,6 +41,7 @@ public final class ControleTarefas {
         });
         tela.btConcluir.addActionListener(e -> concluir());
         tela.btExcluir.addActionListener(e -> excluir());
+        tela.btCategorias.addActionListener(e -> abrirCategorias());
 
         tela.cbStatus.addActionListener(e -> aplicarFiltros());
         tela.cbPrioridade.addActionListener(e -> aplicarFiltros());
@@ -99,6 +100,10 @@ public final class ControleTarefas {
             tela.modelo.addRow(new Object[]{t.getIdTarefa(), t.getTitulo(), t.getPrioridade(),
                     nomeCategoria(t.getIdCategoria()), t.getStatus()});
         }
+    }
+
+    public void abrirCategorias() {
+        new TelaCategorias(tela, this::atualizar).setVisible(true);
     }
 
     private String nomeCategoria(int id) {
