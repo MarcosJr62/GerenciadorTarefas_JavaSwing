@@ -1,4 +1,5 @@
 package Gerenciador.view;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -9,6 +10,7 @@ public class TelaPrincipal extends JFrame {
     public final JButton btEditar = new JButton("Editar");
     public final JButton btExcluir = new JButton("Excluir");
     public final JButton btConcluir = new JButton("Concluir");
+    public final JButton btCategorias = new JButton("Categorias");
     public final JLabel lblFotoPerfil = new JLabel();
 
     public final JComboBox<String> cbStatus =
@@ -29,7 +31,7 @@ public class TelaPrincipal extends JFrame {
     public TelaPrincipal() {
         super("Gerenciador de Tarefas - Olá, Aluno!");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(640, 460);
+        setSize(720, 460);
         setLocationRelativeTo(null);
 
         JPanel topo = new JPanel();
@@ -43,6 +45,12 @@ public class TelaPrincipal extends JFrame {
 
         add(topo, BorderLayout.NORTH);
         add(new JScrollPane(tabela), BorderLayout.CENTER);
+
+        // Ação para abrir a TelaCategorias
+        btCategorias.addActionListener(e -> {
+            TelaCategorias telaCat = new TelaCategorias(this);
+            telaCat.setVisible(true);
+        });
     }
 
     /** Mostra a foto no canto superior direito; null mostra o avatar padrão. */
@@ -56,6 +64,7 @@ public class TelaPrincipal extends JFrame {
         botoes.add(btEditar);
         botoes.add(btExcluir);
         botoes.add(btConcluir);
+        botoes.add(btCategorias);
 
         lblFotoPerfil.setBorder(BorderFactory.createEmptyBorder(4, 0, 0, 12));
         lblFotoPerfil.setToolTipText("Foto de perfil (clique para alterar)");
