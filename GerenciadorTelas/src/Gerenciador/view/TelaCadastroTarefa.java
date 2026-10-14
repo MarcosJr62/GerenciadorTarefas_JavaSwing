@@ -1,4 +1,5 @@
 package Gerenciador.view;
+
 import Gerenciador.entity.Categoria;
 import Gerenciador.entity.Tarefa;
 
@@ -71,7 +72,7 @@ public class TelaCadastroTarefa extends JDialog {
 
     public void carregarCategorias(List<Categoria> categorias) {
         cbCategoria.removeAllItems();
-        cbCategoria.addItem(new Categoria(0, "(Sem categoria)"));
+        cbCategoria.addItem(new Categoria(0, "(Sem categoria)", ""));
         for (Categoria c : categorias) {
             cbCategoria.addItem(c);
         }
@@ -85,7 +86,7 @@ public class TelaCadastroTarefa extends JDialog {
         cbPrioridade.setSelectedItem(t.getPrioridade());
         cbStatus.setSelectedItem(t.getStatus());
         for (int i = 0; i < cbCategoria.getItemCount(); i++) {
-            if (cbCategoria.getItemAt(i).getId() == t.getIdCategoria()) {
+            if (cbCategoria.getItemAt(i).getIdCategoria() == t.getIdCategoria()) {
                 cbCategoria.setSelectedIndex(i);
                 break;
             }
