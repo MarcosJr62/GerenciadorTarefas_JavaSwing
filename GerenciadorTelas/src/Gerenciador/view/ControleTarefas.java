@@ -1,4 +1,5 @@
 package Gerenciador.view;
+
 import Gerenciador.entity.Categoria;
 import Gerenciador.entity.Tarefa;
 import Gerenciador.usecase.CategoriaUseCase;
@@ -102,7 +103,7 @@ public final class ControleTarefas {
 
     private String nomeCategoria(int id) {
         for (Categoria c : categorias) {
-            if (c.getId() == id) return c.getNome();
+            if (c.getIdCategoria() == id) return c.getNome();
         }
         return "";
     }
@@ -124,7 +125,7 @@ public final class ControleTarefas {
     private void abrirFormulario(Tarefa existente) {
         if (categorias.isEmpty()) {
             JOptionPane.showMessageDialog(tela,
-                    "Cadastre ao menos uma categoria (menu Telas > Categorias) antes de criar tarefas.",
+                    "Cadastre ao menos uma categoria antes de criar tarefas.",
                     "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -145,7 +146,7 @@ public final class ControleTarefas {
         t.setPrioridade((String) form.cbPrioridade.getSelectedItem());
         t.setStatus((String) form.cbStatus.getSelectedItem());
         Categoria cat = (Categoria) form.cbCategoria.getSelectedItem();
-        t.setIdCategoria(cat == null ? 0 : cat.getId());
+        t.setIdCategoria(cat == null ? 0 : cat.getIdCategoria()); 
 
         try {
             t.setDataVencimento(lerData(form.txtDataLimite.getText()));
